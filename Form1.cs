@@ -24,7 +24,7 @@ namespace WinFormOcrTest
                 //如果选择好文件夹，并且点击确定按钮，则显示文件夹路径
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    textBox2.Text= DateTime.Now.ToString();
+                    textBox2.Text = DateTime.Now.ToString();
                     //将选择好的文件夹路径显示在文本框中
                     textBox1.Text = folderBrowserDialog1.SelectedPath;
                     //获取文件夹中的所有文件
@@ -58,7 +58,7 @@ namespace WinFormOcrTest
                         {
                             fi.MoveTo(textBox1.Text + "\\" + file.GetValueOrDefault(fileName) + ".jpg");
                         }
-                       
+
                     }
                     listBox2.Items.Add(file.GetValueOrDefault(fileName));
                 }
@@ -75,6 +75,22 @@ namespace WinFormOcrTest
             {
                 listBox2.Items.Add(file.GetValueOrDefault(fileName));
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox4.Clear();
+            textBox4.Text = "选中项的内容为\r\n";
+            for (int i = 0; i < listBox2.SelectedItems.Count; i++)
+            {
+                //逐条读取选中项的内容
+                textBox4.Text += listBox2.SelectedItems[i].ToString() + "\r\n";
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            textBox4.Clear();
         }
     }
 }
