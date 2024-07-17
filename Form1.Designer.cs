@@ -123,14 +123,14 @@
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(92, 303);
+            textBox2.Location = new Point(108, 325);
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(235, 23);
             textBox2.TabIndex = 10;
             // 
             // textBox3
             // 
-            textBox3.Location = new Point(455, 303);
+            textBox3.Location = new Point(471, 325);
             textBox3.Name = "textBox3";
             textBox3.Size = new Size(261, 23);
             textBox3.TabIndex = 11;
@@ -138,20 +138,20 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(6, 306);
+            label3.Location = new Point(10, 328);
             label3.Name = "label3";
-            label3.Size = new Size(80, 17);
+            label3.Size = new Size(92, 17);
             label3.TabIndex = 12;
-            label3.Text = "修改前时间点";
+            label3.Text = "开始识别时间点";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(369, 309);
+            label4.Location = new Point(373, 331);
             label4.Name = "label4";
-            label4.Size = new Size(80, 17);
+            label4.Size = new Size(92, 17);
             label4.TabIndex = 13;
-            label4.Text = "修改后时间点";
+            label4.Text = "识别完成时间点";
             // 
             // textBox4
             // 
