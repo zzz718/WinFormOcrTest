@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace WinFormOcrTest
 {
     public partial class Form1 : Form
@@ -8,9 +10,8 @@ namespace WinFormOcrTest
         }
         Dictionary<string, string> file = new();
         List<string> keys = new();
-        private void button1_Click(object sender, EventArgs e)
+        private   async void button1_Click(object sender, EventArgs e)
         {
-
             //调用Ocr识别方法
             using (Ocr ocr = new Ocr())
             {
@@ -30,19 +31,55 @@ namespace WinFormOcrTest
                     //获取文件夹中的所有文件
                     string[] fileNames = Directory.GetFiles(folderBrowserDialog1.SelectedPath);
                     //遍历所有文件，并调用Ocr识别方法，并将识别结果保存到新的文件中，并显示文件名
+                    
+                    string endTime = "";
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Restart();
+                    List<Task<string>> tasks = new List<Task<string>>();
                     foreach (string fileName in fileNames)
                     {
                         listBox1.Items.Add(Path.GetFileName(fileName));
                         keys.Add(fileName);
-                        newName = ocr.GetFilePath(fileName);
-                        file.Add(fileName, newName);
+                        var t = Task.Run<string>(() => { return ocr.GetFilePath(fileName); });
+                        tasks.Add(t);
                     }
+                    foreach (var task in tasks)
+                    {
+                        var result = await task;
+                        if (result!= null)
+                        {
+                            file.Add(keys[tasks.IndexOf(task)], result);
+                        }
+                    }
+                   //var results  =await Task.WhenAll(tasks);
+                   // for (int i = 0; i < results.Length; i++)
+                   // {
+                   //     if (results[i]!= null)
+                   //     {
+                   //         file.Add(keys[i], results[i]);
+                   //     }
+                   // }
+                    stopwatch.Stop();
+                    Invoke(new Action(() =>
+                    {
+                        textBox3.Text = "耗时：" + stopwatch.Elapsed.TotalSeconds.ToString() + "秒";
+                    }
+                    //textBox3.Text = endTime;
+                    ));
+                    
                 }
-                textBox3.Text = DateTime.Now.ToString();
+                
                 GC.Collect();
             }
         }
-
+        private  Task Do(string fileName,string newName,Ocr ocr)
+        {
+            return  Task.Run(()=>
+            {
+                newName = ocr.GetFilePath(fileName);
+                file.Add(fileName, newName);
+            });
+        }
         private void button2_Click(object sender, EventArgs e)
         {
             try
