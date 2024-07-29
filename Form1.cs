@@ -10,7 +10,7 @@ namespace WinFormOcrTest
         }
         Dictionary<string, string> file = new();
         List<string> keys = new();
-        private   async void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             //调用Ocr识别方法
             using (Ocr ocr = new Ocr())
@@ -28,58 +28,44 @@ namespace WinFormOcrTest
                     textBox2.Text = DateTime.Now.ToString();
                     //将选择好的文件夹路径显示在文本框中
                     textBox1.Text = folderBrowserDialog1.SelectedPath;
-                    //获取文件夹中的所有文件
+                    //获取文件夹中的所有文件绝对路径
                     string[] fileNames = Directory.GetFiles(folderBrowserDialog1.SelectedPath);
                     //遍历所有文件，并调用Ocr识别方法，并将识别结果保存到新的文件中，并显示文件名
-                    
+
                     string endTime = "";
+                    //启动计时器
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Restart();
+                    //添加任务到任务列表
                     List<Task<string>> tasks = new List<Task<string>>();
                     foreach (string fileName in fileNames)
                     {
                         listBox1.Items.Add(Path.GetFileName(fileName));
                         keys.Add(fileName);
+                        //调用Ocr识别方法，并将识别结果保存到新的文件中，并返回文件名
                         var t = Task.Run<string>(() => { return ocr.GetFilePath(fileName); });
                         tasks.Add(t);
                     }
                     foreach (var task in tasks)
                     {
                         var result = await task;
-                        if (result!= null)
+                        if (result != null)
                         {
+                            //获取文件名
                             file.Add(keys[tasks.IndexOf(task)], result);
                         }
                     }
-                   //var results  =await Task.WhenAll(tasks);
-                   // for (int i = 0; i < results.Length; i++)
-                   // {
-                   //     if (results[i]!= null)
-                   //     {
-                   //         file.Add(keys[i], results[i]);
-                   //     }
-                   // }
                     stopwatch.Stop();
                     Invoke(new Action(() =>
                     {
                         textBox3.Text = "耗时：" + stopwatch.Elapsed.TotalSeconds.ToString() + "秒";
+
                     }
-                    //textBox3.Text = endTime;
                     ));
-                    
                 }
-                
-                GC.Collect();
             }
         }
-        private  Task Do(string fileName,string newName,Ocr ocr)
-        {
-            return  Task.Run(()=>
-            {
-                newName = ocr.GetFilePath(fileName);
-                file.Add(fileName, newName);
-            });
-        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -128,6 +114,14 @@ namespace WinFormOcrTest
         private void button5_Click(object sender, EventArgs e)
         {
             textBox4.Clear();
+        }
+        //全选
+        private void button6_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < this.listBox2.Items.Count; i++)
+            {
+                this.listBox2.SetSelected(i, true);
+            }
         }
     }
 }

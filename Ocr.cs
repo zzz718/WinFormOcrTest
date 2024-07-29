@@ -1,7 +1,9 @@
-﻿using PaddleOCRSharp;
+﻿using Microsoft.Win32.SafeHandles;
+using PaddleOCRSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace WinFormOcrTest
              scannedText = OcrForChinese(bitmap);
 
             bitmap.Dispose();
-            // 将文本返回给调用者
+            // 将文字识别结果返回给调用者
             return scannedText;
         }
 
@@ -43,9 +45,34 @@ namespace WinFormOcrTest
             
             return scannedText;
         }
+
+        //实现IDisposable接口，释放资源
+        // To detect redundant calls
+        private bool _disposedValue;
+
+        // Instantiate a SafeHandle instance.
+        private SafeHandle? _safeHandle = new SafeFileHandle(IntPtr.Zero, true);
+
+        // Public implementation of Dispose pattern callable by consumers.
         public void Dispose()
         {
-           
+            Dispose(true);
+            //GC.SuppressFinalize(this);
+        }
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _safeHandle?.Dispose();
+                    _safeHandle = null;
+                }
+
+                _disposedValue = true;
+            }
         }
     }
 }
