@@ -64,7 +64,7 @@ namespace WinFormOcrTest
                     Invoke(new Action(() =>
                     {
                         textBox3.Text = "耗时：" + stopwatch.Elapsed.TotalSeconds.ToString() + "秒";
-
+                        MessageBox.Show("识别完成！");
                     }
                     ));
                 }
