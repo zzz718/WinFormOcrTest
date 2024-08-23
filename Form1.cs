@@ -9,7 +9,12 @@ namespace WinFormOcrTest
             InitializeComponent();
         }
         Dictionary<string, string> file = new();
+        //照片识别文字结果
         List<string> keys = new();
+        //替换.xsl尾缀
+        string temp = "tdzfc";
+        //存放单独文件名
+        string[] fileNames;
         private async void button1_Click(object sender, EventArgs e)
         {
             //调用Ocr识别方法
@@ -65,12 +70,12 @@ namespace WinFormOcrTest
                 }
             }
         }
-
+        //批量替换文件名
         private void button2_Click(object sender, EventArgs e)
         {
             try
             {
-                //遍历所有文件，并调用Ocr识别方法，并将识别结果保存到新的文件中，并显示文件名
+                //遍历所有文件，并将识别结果保存到新的文件中，并显示文件名
                 foreach (string fileName in keys)
                 {
                     if (System.IO.File.Exists(fileName))
@@ -97,6 +102,7 @@ namespace WinFormOcrTest
             foreach (string fileName in keys)
             {
                 listBox2.Items.Add(file.GetValueOrDefault(fileName));
+
             }
         }
 
@@ -113,6 +119,13 @@ namespace WinFormOcrTest
 
         private void button5_Click(object sender, EventArgs e)
         {
+            listBox2.Items.Clear();
+            file.Clear();
+            keys.Clear();
+            listBox1.Items.Clear();
+            textBox1.Clear();
+            textBox2.Clear();
+            textBox3.Clear();
             textBox4.Clear();
         }
         //全选
@@ -121,6 +134,28 @@ namespace WinFormOcrTest
             for (int i = 0; i < this.listBox2.Items.Count; i++)
             {
                 this.listBox2.SetSelected(i, true);
+            }
+        }
+        //通过excel尾椎分割excel文件名
+        private void button7_Click(object sender, EventArgs e)
+        {
+           
+            foreach (string fileUrl in keys)
+            {
+                string fileName=file.GetValueOrDefault(fileUrl);
+                //防止识别残缺 "." 
+                temp = fileName.Replace(".xlsm", "!");
+                temp = fileName.Replace("xlsm", "!");
+                temp =fileName.Replace(".xlsx","!");
+                temp = fileName.Replace("xlsx", "!");
+                temp = temp.Replace(".xls", "!");
+                temp = temp.Replace("xls", "!");
+                temp = temp.Replace(".", "!");
+                fileNames = temp.Split('!');
+                foreach (string name in fileNames)
+                {
+                    listBox2.Items.Add(name);
+                }
             }
         }
     }
